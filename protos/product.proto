@@ -1,0 +1,112 @@
+syntax = "proto3";
+
+package marketplace;
+
+import "common.proto";
+
+service ProductDB {
+  // Seller APIs
+  rpc RegisterItemForSale(RegisterItemForSaleRequest) returns (RegisterItemForSaleResponse);
+  rpc ChangeItemPrice(ChangeItemPriceRequest) returns (BasicResponse);
+  rpc UpdateUnitsForSale(UpdateUnitsForSaleRequest) returns (UpdateUnitsForSaleResponse);
+  rpc DisplayItemsForSale(DisplayItemsForSaleRequest) returns (ItemsResponse);
+
+  // Buyer APIs
+  rpc SearchItemsForSale(SearchItemsForSaleRequest) returns (ItemsResponse);
+  rpc GetItem(GetItemRequest) returns (GetItemResponse);
+  rpc ProvideFeedback(ProvideFeedbackRequest) returns (ProvideFeedbackResponse);
+
+  // NEW: Used by CustomerDB.MakePurchase to atomically deduct stock
+  rpc DeductStock(DeductStockRequest) returns (BasicResponse);
+}
+
+message Feedback {
+  int32 thumbs_up = 1;
+  int32 thumbs_down = 2;
+}
+
+message Item {
+  ItemId item_id = 1;
+  string item_name = 2;
+  int32 category = 3;
+  repeated string keywords = 4;
+  string condition = 5;   // "New" or "Used" (we don't enforce too hard here)
+  double sale_price = 6;
+  int32 quantity = 7;
+  int32 seller_id = 8;
+  Feedback feedback = 9;
+}
+
+message RegisterItemForSaleRequest {
+  int32 seller_id = 1;
+  string item_name = 2;
+  int32 category = 3;
+  repeated string keywords = 4;   // up to 5
+  string condition = 5;
+  double sale_price = 6;
+  int32 quantity = 7;
+}
+
+message RegisterItemForSaleResponse {
+  bool ok = 1;
+  string error = 2;
+  ItemId item_id = 3;
+}
+
+message ChangeItemPriceRequest {
+  ItemId item_id = 1;
+  double new_price = 2;
+}
+
+message UpdateUnitsForSaleRequest {
+  ItemId item_id = 1;
+  int32 remove_qty = 2;
+}
+
+message UpdateUnitsForSaleResponse {
+  bool ok = 1;
+  string error = 2;
+  int32 quantity = 3; // remaining quantity
+}
+
+message DisplayItemsForSaleRequest {
+  int32 seller_id = 1;
+}
+
+message SearchItemsForSaleRequest {
+  int32 category = 1;
+  repeated string keywords = 2; // up to 5
+}
+
+message ItemsResponse {
+  bool ok = 1;
+  string error = 2;
+  repeated Item items = 3;
+}
+
+message GetItemRequest {
+  ItemId item_id = 1;
+}
+
+message GetItemResponse {
+  bool ok = 1;
+  string error = 2;
+  Item item = 3;
+}
+
+message ProvideFeedbackRequest {
+  ItemId item_id = 1;
+  string thumb = 2; // "up" or "down"
+}
+
+message ProvideFeedbackResponse {
+  bool ok = 1;
+  string error = 2;
+  int32 thumbs_up = 3;
+  int32 thumbs_down = 4;
+}
+
+message DeductStockRequest {
+  ItemId item_id = 1;
+  int32 quantity = 2; // quantity to deduct
+}

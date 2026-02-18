@@ -1,0 +1,149 @@
+syntax = "proto3";
+
+package marketplace;
+
+import "common.proto";
+
+service CustomerDB {
+  // sessions
+  rpc CheckSession(CheckSessionRequest) returns (CheckSessionResponse);
+
+  // seller
+  rpc SellerCreateAccount(SellerCreateAccountRequest) returns (SellerCreateAccountResponse);
+  rpc SellerLogin(LoginRequest) returns (LoginResponse);
+  rpc SellerLogout(LogoutRequest) returns (BasicResponse);
+  rpc GetSellerIdBySession(SessionRequest) returns (GetSellerIdResponse);
+  rpc GetSellerRatingBySession(SessionRequest) returns (GetSellerRatingResponse);
+  rpc GetSellerRatingBySellerId(GetSellerRatingBySellerIdRequest) returns (GetSellerRatingResponse);
+
+  // buyer
+  rpc BuyerCreateAccount(BuyerCreateAccountRequest) returns (BuyerCreateAccountResponse);
+  rpc BuyerLogin(LoginRequest) returns (LoginResponse);
+  rpc BuyerLogout(LogoutRequest) returns (BasicResponse);
+  rpc GetBuyerIdBySession(SessionRequest) returns (GetBuyerIdResponse);
+
+  // cart (buyer)
+  rpc AddItemToCart(CartItemRequest) returns (CartResponse);
+  rpc RemoveItemFromCart(CartItemRequest) returns (CartResponse);
+  rpc DisplayCart(SessionRequest) returns (CartResponse);
+  rpc ClearCart(SessionRequest) returns (BasicResponse);
+  rpc SaveCart(SessionRequest) returns (SaveCartResponse);
+
+  // purchases (buyer)
+  rpc GetBuyerPurchasesBySession(SessionRequest) returns (PurchasesResponse);
+  rpc MakePurchase(SessionRequest) returns (BasicResponse);
+}
+
+// ---------- session ----------
+message SessionRequest {
+  string session_id = 1;
+}
+
+message CheckSessionRequest {
+  string session_id = 1;
+  string role = 2;  // "buyer" or "seller"
+}
+
+message CheckSessionResponse {
+  bool ok = 1;
+  string error = 2;
+  int32 user_id = 3;
+}
+
+// ---------- auth ----------
+message LoginRequest {
+  string username = 1;
+  string password = 2;
+}
+
+message LoginResponse {
+  bool ok = 1;
+  string error = 2;
+  string session_id = 3;
+  int32 user_id = 4; // seller_id or buyer_id
+}
+
+message LogoutRequest {
+  string session_id = 1;
+}
+
+// ---------- seller ----------
+message SellerCreateAccountRequest {
+  string username = 1;
+  string password = 2;
+  string seller_name = 3;
+}
+
+message SellerCreateAccountResponse {
+  bool ok = 1;
+  string error = 2;
+  int32 seller_id = 3;
+}
+
+message GetSellerIdResponse {
+  bool ok = 1;
+  string error = 2;
+  int32 seller_id = 3;
+}
+
+message GetSellerRatingResponse {
+  bool ok = 1;
+  string error = 2;
+  int32 thumbs_up = 3;
+  int32 thumbs_down = 4;
+}
+
+message GetSellerRatingBySellerIdRequest {
+  int32 seller_id = 1;
+}
+
+// ---------- buyer ----------
+message BuyerCreateAccountRequest {
+  string username = 1;
+  string password = 2;
+  string buyer_name = 3;
+}
+
+message BuyerCreateAccountResponse {
+  bool ok = 1;
+  string error = 2;
+  int32 buyer_id = 3;
+}
+
+message GetBuyerIdResponse {
+  bool ok = 1;
+  string error = 2;
+  int32 buyer_id = 3;
+}
+
+// ---------- cart ----------
+message CartItemRequest {
+  string session_id = 1;
+  ItemId item_id = 2;
+  int32 quantity = 3;
+}
+
+// cart stored as list of entries (protobuf doesn't like dynamic map keys as nicely as json)
+message CartEntry {
+  ItemId item_id = 1;
+  int32 quantity = 2;
+}
+
+message CartResponse {
+  bool ok = 1;
+  string error = 2;
+  repeated CartEntry cart = 3;
+}
+
+message SaveCartResponse {
+  bool ok = 1;
+  string error = 2;
+  repeated CartEntry saved_cart = 3;
+}
+
+// ---------- purchases ----------
+message PurchasesResponse {
+  bool ok = 1;
+  string error = 2;
+  repeated string purchases = 3;
+}

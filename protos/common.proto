@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package marketplace;
+
+// shared types used by multiple services
+
+message BasicResponse {
+  bool ok = 1;
+  string error = 2;
+}
+
+message ItemId {
+  int32 category = 1;
+  int32 num = 2;
+}
