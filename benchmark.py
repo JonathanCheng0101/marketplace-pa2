@@ -18,10 +18,11 @@ import requests
 from requests.adapters import HTTPAdapter
 
 # -------------------- config --------------------
-FE_IP = os.getenv("FE_IP", "127.0.0.1")
+SELLER_IP = os.getenv("SELLER_IP", "10.128.0.8")
+BUYER_IP  = os.getenv("BUYER_IP",  "10.128.0.9")
 
-SELLER_BASE = f"http://{FE_IP}:5001"
-BUYER_BASE  = f"http://{FE_IP}:5000"
+SELLER_BASE = f"http://{SELLER_IP}:5001"
+BUYER_BASE  = f"http://{BUYER_IP}:5000"
 
 # seller
 SELLER_CREATE_ACCOUNT = "/sellers"

@@ -26,3 +26,7 @@ source venv/bin/activate
 pip install -r requirements.txt
 
 pip install grpcio grpcio-tools
+
+
+python3 client_buyer.py http://10.128.0.9:5000
+python3 client_seller.py http://10.128.0.8:5001
