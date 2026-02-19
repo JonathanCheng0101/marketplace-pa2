@@ -111,7 +111,7 @@ def soap_process_transaction(
 </soapenv:Envelope>
 """
 
-    headers = {"Content-Type": "text/xml; charset=utf-8", "SOAPAction": "ProcessTransaction"}
+    headers = {"Content-Type": "text/xml; charset=utf-8", "SOAPAction": '"ProcessTransaction"'}
 
     try:
         resp = sess.post(endpoint, data=body.encode("utf-8"), headers=headers, timeout=timeout_sec)
