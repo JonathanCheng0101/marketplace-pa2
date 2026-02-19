@@ -1,8 +1,4 @@
-# pa2_benchmark_slim_diag.py
-# PA2 benchmark (REST FE -> gRPC DBs; purchase triggers SOAP)
-# - per-thread requests.Session (Windows port exhaustion fix)
-# - scenario 3: relogin once on 401
-# - basic diagnostics per run (codes + top errors)
+# pa2_benchmark
 #
 # Usage:
 #   python pa2_benchmark_slim_diag.py 1
@@ -10,6 +6,7 @@
 #   python pa2_benchmark_slim_diag.py 3
 
 import sys
+import os
 import time
 import threading
 import random
@@ -21,8 +18,10 @@ import requests
 from requests.adapters import HTTPAdapter
 
 # -------------------- config --------------------
-SELLER_BASE = "http://127.0.0.1:5001"
-BUYER_BASE  = "http://127.0.0.1:5000"
+FE_IP = os.getenv("FE_IP", "127.0.0.1")
+
+SELLER_BASE = f"http://{FE_IP}:5001"
+BUYER_BASE  = f"http://{FE_IP}:5000"
 
 # seller
 SELLER_CREATE_ACCOUNT = "/sellers"
