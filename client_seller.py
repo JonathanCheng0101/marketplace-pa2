@@ -1,6 +1,7 @@
 # seller_client_rest.py
 import sys
 from typing import Any, Dict, Optional, List
+import os
 
 import requests
 
@@ -136,7 +137,7 @@ def print_help() -> None:
 
 
 def main() -> None:
-    base_url = "http://127.0.0.1:5001"
+    base_url = os.environ.get("BUYER_BASE_URL", "http://127.0.0.1:5001")
     if len(sys.argv) >= 2:
         base_url = sys.argv[1]
 
