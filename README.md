@@ -1,32 +1,10 @@
-python customer_db.py
-python product_db.py
-python server_buyer.py
-python server_seller.py
-python client_buyer.py
-python client_seller.py
+This system consists of four main components: buyer-frontend (REST), seller-frontend (REST), customer-db (gRPC), and product-db (gRPC), along with a transactions service implemented using SOAP. The frontends expose REST APIs to clients and communicate with the database services exclusively via gRPC stubs. The transactions service is invoked via SOAP during purchase operations.
 
-py -3.11 -m venv .venv311
-.\.venv311\Scripts\activate
-python -m pip install -U pip setuptools wheel
-python -m pip install spyne==2.14.0 six lxml
-python transactions.py
+Each component runs as an independent process on a dedicated VM using separate ports (customer-db: 8000, product-db: 9000, buyer-frontend: 5000, seller-frontend: 5001, transactions: 6500). Benchmarking is performed from a separate client VM.
+
+The system assumes a reliable network environment and well-behaved clients. Fault tolerance, security hardening, and protection against network failures or malicious attacks are outside the scope of this project. The focus is on supporting concurrent sellers and buyers and evaluating performance under increasing load.
 
 
-customer_db port = 8000
-product_db  port = 9000
-server_buyer.py  port = 5000
-server_seller.py port = 5001
-transactions.py port = 6500
 
 
-sudo apt update
-sudo apt install python3-pip python3-venv -y
-python3 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
 
-pip install grpcio grpcio-tools
-
-
-python3 client_buyer.py http://10.128.0.9:5000
-python3 client_seller.py http://10.128.0.8:5001
