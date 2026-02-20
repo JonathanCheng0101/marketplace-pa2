@@ -1,9 +1,5 @@
-# pa2_benchmark
-#
-# Usage:
-#   python pa2_benchmark_slim_diag.py 1
-#   python pa2_benchmark_slim_diag.py 2
-#   python pa2_benchmark_slim_diag.py 3
+# benchmark
+
 
 import sys
 import os
